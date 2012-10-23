@@ -48,7 +48,7 @@ class Memcached
     # storing <tt>nil</tt> values.
     def get(key, raw=false)
       super(key, !raw)
-    rescue NotFound
+    rescue NotFound,ServerIsMarkedDead
     end
 
     # Alternative to #get. Accepts a key and an optional options hash supporting the single option
@@ -61,7 +61,7 @@ class Memcached
     def exist?(key, options = {})
       exist(key)
       true
-    rescue NotFound
+    rescue NotFound,ServerIsMarkedDead
       false
     end
 
@@ -72,7 +72,7 @@ class Memcached
     rescue TypeError => e
       # Maybe we got an ActiveSupport::Duration
       ttl = ttl.value and retry rescue raise e
-    rescue NotFound, ConnectionDataExists
+    rescue NotFound,ServerIsMarkedDead, ConnectionDataExists
       false
     end
 
@@ -125,19 +125,19 @@ class Memcached
     # Wraps Memcached#delete so that it doesn't raise.
     def delete(key, expiry=0)
       super(key)
-    rescue NotFound
+    rescue NotFound,ServerIsMarkedDead
     end
 
     # Wraps Memcached#incr so that it doesn't raise.
     def incr(*args)
       super
-    rescue NotFound
+    rescue NotFound,ServerIsMarkedDead
     end
 
     # Wraps Memcached#decr so that it doesn't raise.
     def decr(*args)
       super
-    rescue NotFound
+    rescue NotFound,ServerIsMarkedDead
     end
 
     # Wraps Memcached#append so that it doesn't raise.
