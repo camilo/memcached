@@ -6,8 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Evan Weaver"]
-  s.cert_chain = ["/Users/eweaver/cloudburst/configuration/gem_certificates/evan_weaver-original-public_cert.pem"]
-  s.date = "2012-09-27"
+  s.date = "2012-10-23"
   s.description = "An interface to the libmemcached C client."
   s.email = ""
   s.extensions = ["ext/extconf.rb"]
@@ -17,8 +16,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Memcached", "--main", "README.rdoc", "--exclude=ext/bin", "--exclude=ext/libmemcached-.*/(clients|tests)"]
   s.require_paths = ["lib", "ext"]
   s.rubyforge_project = "evan"
-  s.rubygems_version = "1.8.24"
-  s.signing_key = "/Users/eweaver/cloudburst/configuration/gem_certificates/evan_weaver-original-private_key.pem"
+  s.rubygems_version = "1.8.23"
   s.summary = "An interface to the libmemcached C client."
   s.test_files = ["test/test_helper.rb", "test/unit/binding_test.rb", "test/unit/memcached_experimental_test.rb", "test/unit/memcached_test.rb", "test/unit/rails_test.rb"]
 
