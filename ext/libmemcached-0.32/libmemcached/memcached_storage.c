@@ -177,6 +177,8 @@ static inline memcached_return memcached_send(memcached_st *ptr,
 }
 
 
+#define SLAB_SIZE (2*1024*1024)
+
 memcached_return memcached_set(memcached_st *ptr, const char *key, size_t key_length,
                                const char *value, size_t value_length,
                                time_t expiration,
@@ -185,7 +187,7 @@ memcached_return memcached_set(memcached_st *ptr, const char *key, size_t key_le
   memcached_return rc;
   LIBMEMCACHED_MEMCACHED_SET_START();
 
-  if (value_length > 2*1024*1024)
+  if (value_length > SLAB_SIZE)
   {
     return MEMCACHED_NOTSTORED;
   }
