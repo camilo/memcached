@@ -258,10 +258,15 @@ class RailsTest < Test::Unit::TestCase
 
   def test_nonfatal_exceptions_absorbed
     assert_nothing_raised do
-      assert_nothing_raised do
-        @cache.read("does_not_exist")
-        @cache.write("key", "a"*20000000)
-      end
+      @cache.read("does_not_exist")
+      @cache.write("key", "a"*20000000)
+    end
+  end
+
+  def test_get_multi_doesnt_raise_nonfatal
+    assert_nothing_raised do
+      cache = Memcached::Rails.new(:servers => ["localhost:12345"])
+      cache.get_multi(['key1', 'key2'])
     end
   end
 
