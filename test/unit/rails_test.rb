@@ -250,6 +250,21 @@ class RailsTest < Test::Unit::TestCase
     assert_equal nil, @cache.read("x")
   end
 
+  def test_fatal_exceptions_raised
+    assert_raises(Memcached::ABadKeyWasProvidedOrCharactersOutOfRange) do
+      @cache.write("a bad key", 1)
+    end
+  end
+
+  def test_nonfatal_exceptions_absorbed
+    assert_nothing_raised do
+      assert_nothing_raised do
+        @cache.read("does_not_exist")
+        @cache.write("key", "a"*20000000)
+      end
+    end
+  end
+
   private
 
   def key

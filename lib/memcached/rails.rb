@@ -2,6 +2,20 @@ require 'memcached'
 
 class Memcached
 
+  FATAL = [
+    ABadKeyWasProvidedOrCharactersOutOfRange,
+    AKeyLengthOfZeroWasProvided,
+    ConnectionBindFailure,
+    ConnectionDataDoesNotExist,
+    ConnectionFailure,
+    ConnectionSocketCreateFailure,
+    CouldNotOpenUnixSocket,
+    NoServersDefined,
+    TheHostTransportProtocolDoesNotMatchThatOfTheClient
+  ]
+
+  NONFATAL = EXCEPTIONS - FATAL
+
   (instance_methods - NilClass.instance_methods).each do |method_name|
     eval("alias :'#{method_name}_orig' :'#{method_name}'")
   end
@@ -48,7 +62,7 @@ class Memcached
     # storing <tt>nil</tt> values.
     def get(key, raw=false)
       super(key, !raw)
-    rescue NotFound,ServerIsMarkedDead
+    rescue *NONFATAL
     end
 
     # Alternative to #get. Accepts a key and an optional options hash supporting the single option
@@ -61,7 +75,7 @@ class Memcached
     def exist?(key, options = {})
       exist(key)
       true
-    rescue NotFound,ServerIsMarkedDead
+    rescue *NONFATAL
       false
     end
 
@@ -72,7 +86,7 @@ class Memcached
     rescue TypeError => e
       # Maybe we got an ActiveSupport::Duration
       ttl = ttl.value and retry rescue raise e
-    rescue NotFound,ServerIsMarkedDead, ConnectionDataExists
+    rescue *NONFATAL
       false
     end
 
@@ -90,7 +104,7 @@ class Memcached
     rescue TypeError => e
       # Maybe we got an ActiveSupport::Duration
       ttl = ttl.value and retry rescue raise e
-    rescue NotStored,ServerIsMarkedDead
+    rescue *NONFATAL
       false
     end
 
@@ -118,38 +132,38 @@ class Memcached
     rescue TypeError => e
       # Maybe we got an ActiveSupport::Duration
       ttl = ttl.value and retry rescue raise e
-    rescue NotStored
+    rescue *NONFATAL
       @string_return_types? "NOT STORED\r\n" : false
     end
 
     # Wraps Memcached#delete so that it doesn't raise.
     def delete(key, expiry=0)
       super(key)
-    rescue NotFound,ServerIsMarkedDead
+    rescue *NONFATAL
     end
 
     # Wraps Memcached#incr so that it doesn't raise.
     def incr(*args)
       super
-    rescue NotFound,ServerIsMarkedDead
+    rescue *NONFATAL
     end
 
     # Wraps Memcached#decr so that it doesn't raise.
     def decr(*args)
       super
-    rescue NotFound,ServerIsMarkedDead
+    rescue *NONFATAL
     end
 
     # Wraps Memcached#append so that it doesn't raise.
     def append(*args)
       super
-    rescue NotStored
+    rescue *NONFATAL
     end
 
     # Wraps Memcached#prepend so that it doesn't raise.
     def prepend(*args)
       super
-    rescue NotStored
+    rescue *NONFATAL
     end
 
     alias :flush_all :flush
