@@ -95,6 +95,8 @@ class Memcached
     # Wraps Memcached#get.
     def get_multi(keys, raw=false)
       get_orig(keys, !raw)
+    rescue *NONFATAL
+      {}
     end
 
     # Wraps Memcached#set.
