@@ -184,6 +184,12 @@ memcached_return memcached_set(memcached_st *ptr, const char *key, size_t key_le
 {
   memcached_return rc;
   LIBMEMCACHED_MEMCACHED_SET_START();
+
+  if (value_length > 2*1024*1024)
+  {
+    return MEMCACHED_NOTSTORED;
+  }
+
   rc= memcached_send(ptr, key, key_length,
                      key, key_length, value, value_length,
                      expiration, flags, 0, SET_OP);
