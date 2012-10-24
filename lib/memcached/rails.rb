@@ -90,7 +90,7 @@ class Memcached
     rescue TypeError => e
       # Maybe we got an ActiveSupport::Duration
       ttl = ttl.value and retry rescue raise e
-    rescue NotStored
+    rescue NotStored,ServerIsMarkedDead
       false
     end
 
